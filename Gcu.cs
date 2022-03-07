@@ -13,7 +13,7 @@ namespace WinGCU
         Mutex mt = new Mutex(false, "gcuMutex");
         /* Send the 7 byte command, consume the echo from 1 wire operation */
         private bool send_cmd(ref SerialPort serialPort, ref char[] cmd) {
-            Thread.Sleep(200);
+            Thread.Sleep(20);
             serialPort.Write(cmd, 0, cmd.Length);
             try
             {
@@ -165,6 +165,7 @@ namespace WinGCU
             string response_str = System.String.Empty;
             char[] cmd = new char[] { 'Q', ' ', ' ', ' ', ' ', ' ', ' ' };
             send_cmd(ref serialPort, ref cmd);
+            Thread.Sleep(200);
             mt.ReleaseMutex();
             return true;
         }

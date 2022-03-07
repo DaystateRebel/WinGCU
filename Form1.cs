@@ -36,6 +36,9 @@ namespace WinGCU
             midPulse.Enabled = false;
             lowPulse.Enabled = false;
             volts.Enabled = false;
+            pl_high.Enabled = false;
+            pl_medium.Enabled = false;
+            pl_low.Enabled = false;
             update_AvailableSerialPorts();
             if (AvailableSerialPorts.Items.Count > 0)
             {
@@ -203,6 +206,9 @@ namespace WinGCU
                     midPulse.Enabled = false;
                     lowPulse.Enabled = false;
                     volts.Enabled = false;
+                    pl_high.Enabled = false;
+                    pl_medium.Enabled = false;
+                    pl_low.Enabled = false;
                 }
                 else
                 {
@@ -217,6 +223,9 @@ namespace WinGCU
                     midPulse.Enabled = true;
                     lowPulse.Enabled = true;
                     volts.Enabled = true;
+                    pl_high.Enabled = true;
+                    pl_medium.Enabled = true;
+                    pl_low.Enabled = true;
                     upload.Enabled = serialPort.IsOpen;
                     historyListBox.Items.Add(String.Format("File loaded : {0}", openFileDialog1.FileName));
                 }
@@ -419,6 +428,10 @@ namespace WinGCU
             lowPulse.Enabled = true;
             volts.Enabled = true;
             upload.Enabled = true;
+            pl_high.Enabled = true;
+            pl_medium.Enabled = true;
+            pl_low.Enabled = true;
+
             historyListBox.Items.Add("Download OK");
         }
 
