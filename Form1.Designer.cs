@@ -311,6 +311,11 @@
             0,
             196608});
             this.volts.Location = new System.Drawing.Point(207, 167);
+            this.volts.Maximum = new decimal(new int[] {
+            74775,
+            0,
+            0,
+            196608});
             this.volts.Name = "volts";
             this.volts.Size = new System.Drawing.Size(100, 26);
             this.volts.TabIndex = 18;

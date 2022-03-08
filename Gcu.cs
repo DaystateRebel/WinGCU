@@ -64,8 +64,9 @@ namespace WinGCU
             serialPort.DtrEnable = true;
             Thread.Sleep(500);
             send_cmd(ref serialPort, ref cmd);
-            return read_response(ref serialPort, ref version);
+            var result = read_response(ref serialPort, ref version);
             mt.ReleaseMutex();
+            return result;
         }
 
         public void disconnect(ref SerialPort serialPort)
@@ -141,6 +142,21 @@ namespace WinGCU
             mt.ReleaseMutex();
             return result;
         }
+        public bool write_u8(ref SerialPort serialPort, int address, uint value)
+        {
+            mt.WaitOne();
+            var address_string = address.ToString("D2");
+            char[] charA = address_string.ToCharArray();
+            var value_string = value.ToString("D3");
+            char[] charV = value_string.ToCharArray();
+
+            string response_str = System.String.Empty;
+            char[] cmd = new char[] { 'w', charA[0], charA[1], '0', charV[0], charV[1], charV[2] };
+            send_cmd(ref serialPort, ref cmd);
+            var result = read_response(ref serialPort, ref response_str);
+            mt.ReleaseMutex();
+            return result;
+        }
         public bool power_lock(ref SerialPort serialPort, uint pulse, uint volts)
         {
             mt.WaitOne();
@@ -163,6 +179,21 @@ namespace WinGCU
         {
             mt.WaitOne();
             string response_str = System.String.Empty;
+            char[] cmd = new char[] { 'Q', ' ', ' ', ' ', ' ', ' ', ' ' };
+            send_cmd(ref serialPort, ref cmd);
+            Thread.Sleep(200);
+            mt.ReleaseMutex();
+            return true;
+        }
+        public bool set_power_level(ref SerialPort serialPort, uint power_level)
+        {
+            mt.WaitOne();
+            string response_str = System.String.Empty;
+            if(!write_u8(ref serialPort, 5, power_level+1))
+            {
+                mt.ReleaseMutex();
+                return false;
+            }
             char[] cmd = new char[] { 'Q', ' ', ' ', ' ', ' ', ' ', ' ' };
             send_cmd(ref serialPort, ref cmd);
             Thread.Sleep(200);

@@ -105,6 +105,9 @@ namespace WinGCU
                     download.Enabled = true;
                     connectionstate.Text = "Disconnect";
                     historyListBox.Items.Add("Connected Ok");
+                    pl_high.Enabled = (powerLevels.Count == 3);
+                    pl_medium.Enabled = (powerLevels.Count == 3);
+                    pl_low.Enabled = (powerLevels.Count == 3);
                     poll_timer.Enabled = true;
                 }
                 else
@@ -122,6 +125,9 @@ namespace WinGCU
                 connectionstate.Text = "Connect";
                 upload.Enabled = false;
                 download.Enabled = false;
+                pl_high.Enabled = false;
+                pl_medium.Enabled = false;
+                pl_low.Enabled = false;
                 version.Text = "";
                 pressure.Text = "";
                 pulse_duration.Text = "";
@@ -280,7 +286,19 @@ namespace WinGCU
 
         private void PowerSetting_SelectionChangeCommitted(object sender, EventArgs e)
         {
+            String[] pl_names = { "High", "Medium", "Low" };
             Update_Power_Settings();
+            if(serialPort.IsOpen && PowerSetting.SelectedIndex != -1)
+            {
+                if(gcu.set_power_level(ref serialPort, (uint)PowerSetting.SelectedIndex))
+                {
+                    historyListBox.Items.Add(String.Format("Setting Power to {0} ... Ok",pl_names[PowerSetting.SelectedIndex]));
+                }
+                else
+                {
+                    historyListBox.Items.Add(String.Format("Setting Power to {0} ... Failed", pl_names[PowerSetting.SelectedIndex]));
+                }
+            }
         }
 
         private void update_high_slope()
@@ -356,6 +374,44 @@ namespace WinGCU
             {
                 if(p >= 100)
                 {
+                    if(pl_high.Checked)
+                    {
+                        if(powerLevels[PowerSetting.SelectedIndex].high_pressure <= p + 3 && powerLevels[PowerSetting.SelectedIndex].high_pressure > p - 3)
+                        {
+                            pressure.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            pressure.BackColor = Color.Red;
+                        }
+
+                    }
+                    else if (pl_medium.Checked)
+                    {
+                        if (powerLevels[PowerSetting.SelectedIndex].mid_pressure <= p + 3 && powerLevels[PowerSetting.SelectedIndex].mid_pressure > p - 3)
+                        {
+                            pressure.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            pressure.BackColor = Color.Red;
+                        }
+                    }
+                    else if (pl_low.Checked)
+                    {
+                        if (powerLevels[PowerSetting.SelectedIndex].low_pressure <= p + 3 && powerLevels[PowerSetting.SelectedIndex].low_pressure > p - 3)
+                        {
+                            pressure.BackColor = Color.Green;
+                        }
+                        else
+                        {
+                            pressure.BackColor = Color.Red;
+                        }
+                    }
+                    else
+                    {
+                        pressure.BackColor = DefaultBackColor;
+                    }
                     pressure.Text = String.Format("{0} BAR", Raw_To_Bar(p));
                 }
                 else
@@ -471,11 +527,37 @@ namespace WinGCU
                 else
                 {
                     historyListBox.Items.Add("Power Lock: High: Ok");
+                    connectionstate.Enabled = false;
+                    download.Enabled = false;
+                    upload.Enabled = false;
+                    highPressure.Enabled = false;
+                    midPressure.Enabled = false;
+                    lowPressure.Enabled = false;
+                    highPulse.Enabled = false;
+                    midPulse.Enabled = false;
+                    lowPulse.Enabled = false;
+                    volts.Enabled = false;
+                    load.Enabled = false;
+                    save.Enabled = false;
+                    PowerSetting.Enabled = false;
                 }
             }
             else
             {
                 gcu.power_unlock(ref serialPort);
+                connectionstate.Enabled = true;
+                download.Enabled = true;
+                upload.Enabled = true;
+                highPressure.Enabled = true;
+                midPressure.Enabled = true;
+                lowPressure.Enabled = true;
+                highPulse.Enabled = true;
+                midPulse.Enabled = true;
+                lowPulse.Enabled = true;
+                volts.Enabled = true;
+                load.Enabled = true;
+                save.Enabled = true;
+                PowerSetting.Enabled = true;
                 historyListBox.Items.Add("Power Lock: Unlock");
             }
         }
@@ -493,11 +575,37 @@ namespace WinGCU
                 else
                 {
                     historyListBox.Items.Add("Power Lock: Medium: Ok");
+                    connectionstate.Enabled = false;
+                    download.Enabled = false;
+                    upload.Enabled = false;
+                    highPressure.Enabled = false;
+                    midPressure.Enabled = false;
+                    lowPressure.Enabled = false;
+                    highPulse.Enabled = false;
+                    midPulse.Enabled = false;
+                    lowPulse.Enabled = false;
+                    volts.Enabled = false;
+                    load.Enabled = false;
+                    save.Enabled = false;
+                    PowerSetting.Enabled = false;
                 }
             }
             else
             {
                 gcu.power_unlock(ref serialPort);
+                connectionstate.Enabled = true;
+                download.Enabled = true;
+                upload.Enabled = true;
+                highPressure.Enabled = true;
+                midPressure.Enabled = true;
+                lowPressure.Enabled = true;
+                highPulse.Enabled = true;
+                midPulse.Enabled = true;
+                lowPulse.Enabled = true;
+                volts.Enabled = true;
+                load.Enabled = true;
+                save.Enabled = true;
+                PowerSetting.Enabled = true;
                 historyListBox.Items.Add("Power Lock: Unlock");
             }
         }
@@ -515,11 +623,37 @@ namespace WinGCU
                 else
                 {
                     historyListBox.Items.Add("Power Lock: Low: Ok");
+                    connectionstate.Enabled = false;
+                    download.Enabled = false;
+                    upload.Enabled = false;
+                    highPressure.Enabled = false;
+                    midPressure.Enabled = false;
+                    lowPressure.Enabled = false;
+                    highPulse.Enabled = false;
+                    midPulse.Enabled = false;
+                    lowPulse.Enabled = false;
+                    volts.Enabled = false;
+                    load.Enabled = false;
+                    save.Enabled = false;
+                    PowerSetting.Enabled = false;
                 }
             }
             else
             {
                 gcu.power_unlock(ref serialPort);
+                connectionstate.Enabled = true;
+                download.Enabled = true;
+                upload.Enabled = true;
+                highPressure.Enabled = true;
+                midPressure.Enabled = true;
+                lowPressure.Enabled = true;
+                highPulse.Enabled = true;
+                midPulse.Enabled = true;
+                lowPulse.Enabled = true;
+                volts.Enabled = true;
+                load.Enabled = true;
+                save.Enabled = true;
+                PowerSetting.Enabled = true;
                 historyListBox.Items.Add("Power Lock: Unlock");
             }
         }
